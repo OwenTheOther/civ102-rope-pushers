@@ -50,7 +50,15 @@ for J = 1:n_train
 
 end
 
-SFD = max(abs(SFDi));   % SFD envelope
+[SFD, max_loads] = max(abs(SFDi));   % SFD envelope
 BMD = max(BMDi);        % BMD envelope
 
-plot(BMD)
+% to use max_loads, plot it
+% x-axis is position along the bridge, y-axis is
+% the position of the rightmost axel relative to x=0
+% you can click on the plot to get the point
+% compare to the SFE and BME to get what the
+% shear/moment is at that point
+
+
+plot(max_loads)
