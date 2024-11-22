@@ -35,10 +35,12 @@ loadsi = zeros(n_train, n_positions);    % 1 load plot for each train loc.
 SFDi = zeros(n_train, n_positions);     % 1 SFD for each train loc.
 BMDi = zeros(n_train, n_positions);     % 1 BMD for each train loc.
 
+
 % Solve for SFD and BMD with the train at different locations
 for J = 1:n_train
     i = train_space(J); % how much we're incrementing the position of the train, the position of the right axel of the train
     % start location of train
+    
     ttrain_pos_i = x_train - max(x_train) + i; % train position 
     ttrain_pos_i(ttrain_pos_i <= 0) = NaN; % Get positions that are on the bridge only (take out positions before 0 position of the bridge)
     % any train position greater than 1201 means it's off the bridge since
@@ -77,8 +79,11 @@ end
 [SFD, max_loads] = max(abs(SFDi));   % SFD envelope
 BMD = max(BMDi);        % BMD envelope
 
-max(SFD)
-max(BMD)
+max(SFD);
+max_BMD_value = max(BMD);
+max_BMD_indexes = find(BMD == max_BMD_value)
+
+
 figure
 plot(BMD)
 
