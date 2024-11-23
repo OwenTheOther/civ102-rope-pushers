@@ -3,7 +3,7 @@ clear; close all;
 %% 0. Initialize Parameters
 L = 1200;               % Length of bridge
 n = L;                  % Discretize into 1 mm seg.
-P = 400;                % Total weight of train [N]
+P = 452;                % Total weight of train [N]
 x = 1:1:L;              % x-axis
 
 % Note: the position is 1mm greater then the physical location from the left
@@ -15,9 +15,10 @@ B_pos = 1200; % position of second support from left edge
 
 %% 1. SFD, BMD under train loading
 x_train = [52 228 392 568 732 908]; % Train Load Locations
-P_train = [1 1 1 1 1 1] * P/6;
+train_rel_loads = [1.35*1.1 1.35*1.1 1 1 1.1 1.1]
+P_train = train_rel_loads * P/sum(train_rel_loads);
 
-n_train = 349;                 % num of train locations
+n_train = 389;                 % num of train locations
 train_space = floor(linspace(1, L + max(x_train), n_train));
 loadsi = zeros(n_train, n);    % 1 load plot for each train loc.
 SFDi = zeros(n_train, n);     % 1 SFD for each train loc.
@@ -50,7 +51,7 @@ for J = 1:n_train
     % SFD = num. integral(w)
     SFDi(i,:) = cumsum(loads);
     % BMD = num. integral(SFD)
-    BMDi(i,:) = cumtrapz(SFDi(i,:));
+    BMDi(i,:) = cumsum(SFDi(i,:));
 
 end
 
@@ -76,13 +77,13 @@ figure(4)
 plot(max_loadsBMD)
 
 %max shear moment (using 600 because bridge is symmetrical and the code gets weird towards right end)
-max_shear = max(SFD(1:600))
+max_shear = max(SFD())
 location_on_bridge = find(round(SFD) == round(max_shear))
 train_rightmost_axel = max_loadsSFD(location_on_bridge)
 
 
 
 %max bending moment
-max_moment = max(BMD(1:600))
+max_moment = max(BMD())
 location_on_bridge = find(round(BMD) == round(max_moment))
 train_rightmost_axel = max_loadsBMD(location_on_bridge)
